@@ -67,29 +67,29 @@ questions.forEach(question => {
         <h5 class="question">${question.question}</h5>
             <p>
             <label>
-                <input class="choice" data-choice="${question.choices[0]}" name="question-${question.id}" type="radio" checked />
+                <input class="choice" data-choice="${question.choices[0]}" name="question-${question.id}" type="radio" />
                 <span>${question.choices[0]}</span>
             </label>
             </p>
             <p>
             <label>
-                <input class="choice" data-choice="${question.choices[1]}" name="question-${question.id}" type="radio" checked />
+                <input class="choice" data-choice="${question.choices[1]}" name="question-${question.id}" type="radio" />
                 <span>${question.choices[1]}</span>
             </label>
             </p>
             <p>
             <label>
-                <input class="choice" data-choice="${question.choices[2]}" name="question-${question.id}" type="radio" checked />
+                <input class="choice" data-choice="${question.choices[2]}" name="question-${question.id}" type="radio" />
                 <span>${question.choices[2]}</span>
             </label>
             </p>
             <p>
             <label>
-                <input class="choice" data-choice="${question.choices[3]}" name="question-${question.id}" type="radio" checked />
+                <input class="choice" data-choice="${question.choices[3]}" name="question-${question.id}" type="radio" />
                 <span>${question.choices[3]}</span>
             </label>
             </p>
-        <p class="answer">${question.correct}</p>
+        <p class="answer-${question.id}" style="visibility: hidden">${question.correct}</p>
     </div>
     `)
 })
@@ -112,7 +112,51 @@ $(document).on('click', '.choice', function () {
 })
 
 $('.finishQuiz').on('click', function () {
-    for (let i = 0; i < questions.length; i++) {
-        if (window[`qChoice${i}`])
-    }
+    finishGame()
 })
+
+function finishGame () {
+    clearInterval(gameTimer)
+    count = 0
+    for (let i = 0; i < questions.length; i++) {
+            $(`.answer-${i}`).css('visibility', 'visible')
+        if (window[`qChoice${i}`] === questions[i].correct) {
+            count++
+        }
+    }
+    if (count === 10) {
+        alert('You Got Them All Right! Well Done.')
+    } else {
+        alert('Better Luck Next Time.')
+    }
+}
+
+    function timeConversion (t) {
+        var minutes = Math.floor(t / 60)
+        var seconds = t - (minutes * 60)
+    
+        if (seconds < 10) {
+          seconds = '0' + seconds
+        }
+    
+        if (minutes === 0) {
+          minutes = '00'
+        } else if (minutes < 10) {
+          minutes = '0' + minutes
+        }
+    
+        return minutes + ':' + seconds
+      }
+
+    let time = 120
+    $('.time').html('02:00')
+
+    let gameTimer = setInterval(function () {
+        time--
+        if (time > 0) {
+        $('.time').html(timeConversion(time))
+        } else {
+        $('.time').html('00:00')
+        finishGame()
+        }
+    }, 1000)
